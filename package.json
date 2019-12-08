@@ -39,7 +39,7 @@
     "event-stream": "3.3.4",
     "firebase": "^2.4.2",
     "firecrypt": "^0.3.3",
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.15",
     "ms": "^0.7.1",
     "nodefire": "^0.7.0",
     "pace": "0.0.4",
