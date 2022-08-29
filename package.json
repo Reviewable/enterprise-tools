@@ -1,6 +1,6 @@
 {
   "name": "reviewable-enterprise-tools",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "description": "Admin tools for Reviewable Enterprise",
   "bin": {
@@ -40,7 +40,7 @@
     "command-line-usage": "^6.1.0",
     "download": "^8.0.0",
     "event-stream": "^4.0.1",
-    "firebase-admin": "9.3.0",
+    "firebase-admin": "11.x",
     "firecrypt": "^2.0.9",
     "hubkit": "^3.0.0",
     "lodash": "^4.17.20",
