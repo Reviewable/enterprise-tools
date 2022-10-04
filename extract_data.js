@@ -93,10 +93,11 @@ async function extract() {
   await extractRepositories();
   await extractRules();
   reviewKeys = _.uniq(reviewKeys);
-  pace.total += 3 * reviewKeys.length;
+  pace.total += 4 * reviewKeys.length;
   await extractReviews();
   await extractLinemaps();
   await extractFilemaps();
+  await extractBasemaps();
   await extractUsers();
   await out.end();
   pace.op();
@@ -302,6 +303,16 @@ async function extractFilemaps() {
   await forEachLimit(reviewKeys, 25, async reviewKey => {
     const filemap = await db.child('filemaps/:reviewKey', {reviewKey}).get();
     await writeItem(`filemaps/${reviewKey}`, filemap);
+    pace.op();
+  });
+}
+
+async function extractBasemaps() {
+  if (!reviewKeys.length) return;
+  log('Extracting basemaps');
+  await forEachLimit(reviewKeys, 25, async reviewKey => {
+    const basemap = await db.child('basemaps/:reviewKey', {reviewKey}).get();
+    await writeItem(`basemaps/${reviewKey}`, basemap);
     pace.op();
   });
 }
