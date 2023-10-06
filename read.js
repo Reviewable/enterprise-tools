@@ -38,7 +38,8 @@ async function read() {
   await import('./lib/loadFirebase.js');
   args.path = args.path.replace(/^\//, '');
   const value = await db.child(args.path).get();
-  console.log(inspect(value, {depth: null}));
+  // console.log(inspect(value, {depth: null}));
+  console.log(JSON.stringify(value, null, 2));
 }
 
 read().then(() => {
