@@ -858,6 +858,15 @@
             }
           }
         },
+        "designatedReviewers": {
+          "$arbitraryKey": {
+            "scope": {
+              ".encrypt": {
+                "value": "#"
+              }
+            }
+          }
+        },
         "discussions": {
           "$discussionKey": {
             "comments": {
@@ -1232,6 +1241,21 @@
             }
           },
           "pushableRepos": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "watchedPushableRepos": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "starredPushableRepos": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "watchedOrStarredPushableRepos": {
             ".encrypt": {
               "value": "#"
             }
