@@ -571,6 +571,14 @@
               }
             }
           },
+          "branches": {
+            "$branch": {
+              ".encrypt": {
+                "key": "#",
+                "few": true
+              }
+            }
+          },
           "protection": {
             "$branch": {
               "required_status_checks": {
