@@ -407,6 +407,11 @@
         }
       },
       "refCleanup": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
         "$refKey": {
           ".encrypt": {
             "key": "#|#|."
