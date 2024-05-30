@@ -406,6 +406,13 @@
           }
         }
       },
+      "refCleanup": {
+        "$refKey": {
+          ".encrypt": {
+            "key": "#|#|."
+          }
+        }
+      },
       "permissions": {
         "ping": {
           ".encrypt": {
@@ -712,6 +719,11 @@
             }
           },
           "title": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "stage": {
             ".encrypt": {
               "value": "#"
             }
