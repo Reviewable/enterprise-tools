@@ -413,8 +413,40 @@
           }
         },
         "$refKey": {
+          "owner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "repo": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "ref": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           ".encrypt": {
             "key": "#|#|."
+          }
+        }
+      },
+      "masterRepoUpdate": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
+        "$ownerName": {
+          "owner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          ".encrypt": {
+            "key": "#"
           }
         }
       },
@@ -483,6 +515,13 @@
     "organizations": {
       "$organization": {
         "prototypeRepository": {
+          "name": {
+            ".encrypt": {
+              "value": "#"
+            }
+          }
+        },
+        "masterRepository": {
           "name": {
             ".encrypt": {
               "value": "#"
