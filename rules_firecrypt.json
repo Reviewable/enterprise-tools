@@ -535,6 +535,22 @@
             }
           }
         },
+        "cache": {
+          "members": {
+            "value": {
+              ".encrypt": {
+                "value": "#"
+              }
+            }
+          },
+          "teams": {
+            "value": {
+              ".encrypt": {
+                "value": "#"
+              }
+            }
+          }
+        },
         ".encrypt": {
           "key": "#"
         }
@@ -618,6 +634,38 @@
                 },
                 ".encrypt": {
                   "few": true
+                }
+              }
+            }
+          },
+          "cache": {
+            "assignees": {
+              "value": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            },
+            "labels": {
+              "value": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            },
+            "milestones": {
+              "value": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            }
+          },
+          "pushOnlyCache": {
+            "collaborators": {
+              "value": {
+                ".encrypt": {
+                  "value": "#"
                 }
               }
             }
