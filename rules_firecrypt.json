@@ -1104,6 +1104,27 @@
                     "value": "#"
                   }
                 },
+                ".encrypt": {
+                  "key": "#",
+                  "few": true
+                }
+              },
+              "code-review\\2freviewable": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
                 "defaultMergeCommitMessage": {
                   ".encrypt": {
                     "value": "#"
@@ -1118,10 +1139,40 @@
                   ".encrypt": {
                     "value": "#"
                   }
+                }
+              },
+              " mergeable": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
                 },
-                ".encrypt": {
-                  "key": "#",
-                  "few": true
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                }
+              },
+              " approval": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
                 }
               }
             },
@@ -1156,6 +1207,27 @@
                     "value": "#"
                   }
                 },
+                ".encrypt": {
+                  "key": "#",
+                  "few": true
+                }
+              },
+              "code-review\\2freviewable": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
                 "defaultMergeCommitMessage": {
                   ".encrypt": {
                     "value": "#"
@@ -1170,10 +1242,40 @@
                   ".encrypt": {
                     "value": "#"
                   }
+                }
+              },
+              " mergeable": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
                 },
-                ".encrypt": {
-                  "key": "#",
-                  "few": true
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                }
+              },
+              " approval": {
+                "context": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "description": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "url": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
                 }
               }
             }
