@@ -535,6 +535,20 @@
             }
           }
         },
+        "connections": {
+          "index": {
+            "active": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "broken": {
+              ".encrypt": {
+                "value": "#"
+              }
+            }
+          }
+        },
         "cache": {
           "members": {
             "value": {
