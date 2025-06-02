@@ -492,6 +492,45 @@
             "key": "#|#|."
           }
         }
+      },
+      "publishOnPush": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
+        "$prKey": {
+          "owner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "repo": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "queryVariables": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "mentions": {
+            "$draftKey": {
+              ".encrypt": {
+                "few": true
+              }
+            }
+          },
+          "updates": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          ".encrypt": {
+            "key": "#|#|.|."
+          }
+        }
       }
     },
     "enrollments": {
@@ -1343,6 +1382,15 @@
             "avatarUrl": {
               ".encrypt": {
                 "value": "#"
+              }
+            },
+            "slackAccounts": {
+              "$workspace": {
+                ".encrypt": {
+                  "key": "#",
+                  "few": true,
+                  "value": "#"
+                }
               }
             }
           }
