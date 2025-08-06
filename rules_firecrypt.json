@@ -604,6 +604,18 @@
             }
           }
         },
+        "slackWorkspace": {
+          "name": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "domain": {
+            ".encrypt": {
+              "value": "#"
+            }
+          }
+        },
         ".encrypt": {
           "key": "#"
         }
