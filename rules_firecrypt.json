@@ -48,6 +48,16 @@
               "value": "#"
             }
           },
+          "description": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "target_url": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           "pusher": {
             "name": {
               ".encrypt": {
@@ -95,6 +105,42 @@
           },
           "check_run": {
             "name": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "details_url": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "app": {
+              "name": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            },
+            "output": {
+              "title": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            }
+          },
+          "workflow_run": {
+            "name": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "workflow_name": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "html_url": {
               ".encrypt": {
                 "value": "#"
               }
@@ -211,6 +257,18 @@
           },
           ".encrypt": {
             "key": "#|#|."
+          }
+        }
+      },
+      "slackNotifications": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
+        "$taskKey": {
+          ".encrypt": {
+            "key": "#|."
           }
         }
       },
@@ -605,14 +663,21 @@
           }
         },
         "slackWorkspace": {
-          "name": {
-            ".encrypt": {
-              "value": "#"
-            }
-          },
-          "domain": {
-            ".encrypt": {
-              "value": "#"
+          "core": {
+            "name": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "domain": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            "enterpriseDomain": {
+              ".encrypt": {
+                "value": "#"
+              }
             }
           }
         },
@@ -1174,6 +1239,16 @@
                     "value": "#"
                   }
                 },
+                "workflow": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "app": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
                 "description": {
                   ".encrypt": {
                     "value": "#"
@@ -1231,6 +1306,16 @@
                     "value": "#"
                   }
                 },
+                "workflow": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
+                "app": {
+                  ".encrypt": {
+                    "value": "#"
+                  }
+                },
                 "description": {
                   ".encrypt": {
                     "value": "#"
@@ -1284,6 +1369,20 @@
             ".encrypt": {
               "few": true
             }
+          }
+        }
+      }
+    },
+    "reviewIndex": {
+      "$reviewKey": {
+        "owner": {
+          ".encrypt": {
+            "value": "#"
+          }
+        },
+        "repo": {
+          ".encrypt": {
+            "value": "#"
           }
         }
       }
@@ -1519,6 +1618,19 @@
         "notifications": {
           "$notificationKey": {
             ".encrypt": {
+              "few": true
+            }
+          }
+        },
+        "teamMemberships": {
+          "$organization": {
+            "organization": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
+            ".encrypt": {
+              "key": "#",
               "few": true
             }
           }
