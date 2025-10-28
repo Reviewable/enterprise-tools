@@ -2,11 +2,14 @@
 
 import commandLineArgs from 'command-line-args';
 import getUsage from 'command-line-usage';
+import {writeFileSync} from 'fs';
 import {inspect} from 'util';
 
 const commandLineOptions = [
   {name: 'path', alias: 'p', type: String, defaultOption: true,
     description: 'The path in Firebase from which to read data.  You can omit the leading slash.'},
+  {name: 'output', alias: 'o', type: String,
+    description: 'The path of the output file to write to instead of the console.'},
   {name: 'help', alias: 'h', type: Boolean,
     description: 'Display these usage instructions.'}
 ];
@@ -39,7 +42,11 @@ async function read() {
   args.path = args.path.replace(/^\//, '');
   const value = await db.child(args.path).get();
   // console.log(inspect(value, {depth: null}));
-  console.log(JSON.stringify(value, null, 2));
+  if (args.output) {
+    writeFileSync(args.output, JSON.stringify(value, null, 2));
+  } else {
+    console.log(JSON.stringify(value, null, 2));
+  }
 }
 
 read().then(() => {
