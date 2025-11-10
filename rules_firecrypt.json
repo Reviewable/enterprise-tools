@@ -103,6 +103,15 @@
               }
             }
           },
+          "pull_request": {
+            "base": {
+              "ref": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            }
+          },
           "check_run": {
             "name": {
               ".encrypt": {
@@ -1632,6 +1641,15 @@
             ".encrypt": {
               "key": "#",
               "few": true
+            }
+          }
+        },
+        "slackAccounts": {
+          "$workspace": {
+            ".encrypt": {
+              "key": "#",
+              "few": true,
+              "value": "#"
             }
           }
         },
