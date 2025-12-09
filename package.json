@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "download": "^8.0.0",
     "event-stream": "^4.0.1",
     "firebase-admin": "^12.0.0",
-    "firecrypt": "^3.0.0",
+    "firecrypt": "^4.0.0",
     "hubkit": "^5.2.0",
     "lodash": "^4.17.20",
     "ms": "^2.1.2",
