@@ -3,7 +3,7 @@
 import commandLineArgs from 'command-line-args';
 import getUsage from 'command-line-usage';
 import {writeFileSync} from 'fs';
-import {inspect} from 'util';
+// import {inspect} from 'util';
 
 const commandLineOptions = [
   {name: 'path', alias: 'p', type: String, defaultOption: true,

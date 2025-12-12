@@ -74,7 +74,7 @@ async function load() {
   let sizeRead = 0;
   let fatalError;
 
-  const pace = Pace(fs.statSync(args.input).size);
+  const pace = Pace(fs.statSync(args.input).size);  // eslint-disable-line new-cap
   const reader = fs.createReadStream(args.input)
     .pipe(new Throttle({rate: 200000, chunksize: 50000}))
     .pipe(es.mapSync(chunk => {
@@ -84,7 +84,7 @@ async function load() {
     }))
     .pipe(es.split())
     .pipe(es.parse({error: true}))
-    .pipe(es.map(async (item, callback) => {
+    .pipe(es.map(async (item, callback) => {  // eslint-disable-line lodash/prefer-lodash-method
       await processLine(item);
       callback();
     }))
@@ -129,7 +129,7 @@ async function processLine([key, value, flags]) {
         await db.child(key).update(value);
       }
     } catch (e) {
-      e.message + ` (at ${key})`;
+      e.message += ` (at ${key})`;
       throw e;
     }
   }

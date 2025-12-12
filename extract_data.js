@@ -82,7 +82,8 @@ const out = new PromiseWritable(fs.createWriteStream(args.output));
 out.stream.setMaxListeners(Infinity);
 
 const pace = args.logging ?
-  {op() {}, total: 0} :
+  {op: _.noop, total: 0} :
+  // eslint-disable-next-line new-cap
   Pace(1 + 2 + orgNames.length + 2 * repoNames.length + _.size(userMap));
 
 let reviewKeys = [];
@@ -420,7 +421,7 @@ async function extractUsers() {
 }
 
 async function writeItem(key, value, flags) {
-  if (value === undefined || value === null) return;
+  if (_.isNil(value)) return;
   value = mapAllUserKeys(value, key);
   if (flags) {
     await out.write(

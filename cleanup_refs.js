@@ -81,7 +81,7 @@ async function main() {
     process.exit(1);
   }
   if (args.validateOnly) return;
-  const pace = Pace(refs.length);
+  const pace = Pace(refs.length);  // eslint-disable-line new-cap
   const maxDelay = ms(args.maxDelay);
   let saved = 0;
   await eachLimit(_.chunk(refs, UPDATE_SIZE), MAX_PARALLEL_UPDATES, async refsBatch => {
