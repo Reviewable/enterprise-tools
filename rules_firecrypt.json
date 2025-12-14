@@ -33,6 +33,11 @@
     "queues": {
       "github": {
         "$eventKey": {
+          "payload": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           "statusSyncKey": {
             ".encrypt": {
               "value": "#"
