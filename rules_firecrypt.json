@@ -1659,6 +1659,16 @@
           }
         },
         "settings": {
+          "lastDashboardOrganization": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "lastAdminOrganization": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           "syntaxStylesheetUrl": {
             ".encrypt": {
               "value": "#"
@@ -1707,6 +1717,11 @@
                   "few": true
                 }
               }
+            }
+          },
+          "adminOrganization": {
+            ".encrypt": {
+              "value": "#"
             }
           }
         },
