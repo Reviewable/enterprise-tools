@@ -1135,6 +1135,13 @@
         },
         "discussions": {
           "$discussionKey": {
+            "summary": {
+              "html": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            },
             "comments": {
               "$commentKey": {
                 "markdownBody": {
@@ -1636,6 +1643,13 @@
             }
           }
         },
+        "missingScopes": {
+          "$scope": {
+            ".encrypt": {
+              "few": true
+            }
+          }
+        },
         "teamMemberships": {
           "$organization": {
             "organization": {
@@ -1723,6 +1737,13 @@
             ".encrypt": {
               "value": "#"
             }
+          },
+          "sidebarSettingsByScreenWidth": {
+            "$screenWidthKey": {
+              ".encrypt": {
+                "few": true
+              }
+            }
           }
         },
         "state": {
@@ -1740,6 +1761,14 @@
                   }
                 },
                 "htmlBodies": {
+                  "$hashKey": {
+                    ".encrypt": {
+                      "few": true,
+                      "value": "#"
+                    }
+                  }
+                },
+                "summaryHtmlBodies": {
                   "$hashKey": {
                     ".encrypt": {
                       "few": true,
@@ -1810,6 +1839,14 @@
                     }
                   },
                   "htmlBodies": {
+                    "$hashKey": {
+                      ".encrypt": {
+                        "few": true,
+                        "value": "#"
+                      }
+                    }
+                  },
+                  "summaryHtmlBodies": {
                     "$hashKey": {
                       ".encrypt": {
                         "few": true,
