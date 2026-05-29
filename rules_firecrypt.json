@@ -738,6 +738,20 @@
               }
             }
           },
+          "extraAdminUserKeys": {
+            "$userKey": {
+              ".encrypt": {
+                "few": true
+              }
+            }
+          },
+          "badAdminUserKeys": {
+            "$userKey": {
+              ".encrypt": {
+                "few": true
+              }
+            }
+          },
           "permissions": {
             "$userKey": {
               ".encrypt": {
@@ -1536,6 +1550,13 @@
                 "value": "#"
               }
             },
+            "tag": {
+              "name": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              }
+            },
             "slackAccounts": {
               "$workspace": {
                 ".encrypt": {
@@ -1614,6 +1635,13 @@
             "$membershipKey": {
               ".encrypt": {
                 "key": "#|#",
+                "few": true
+              }
+            }
+          },
+          "agents": {
+            "$agentKey": {
+              ".encrypt": {
                 "few": true
               }
             }
