@@ -15,6 +15,8 @@ import {uploadedFilesUrl, PLACEHOLDER_URL} from './lib/derivedInfo.js';
 
 const NodeFire = nodefireModule.default;
 
+const TARGETS = ['saas', 'ghes'];
+
 const commandLineOptions = [
   {name: 'repos', alias: 'r', typeLabel: '{underline repos.json}',
     description: 'A file with a JSON array of "owner/repo" repo names to extract.'},
@@ -26,6 +28,16 @@ const commandLineOptions = [
       'user id mappings. (Optional, defaults to identity mapping.)'},
   {name: 'merge', alias: 'm', type: Boolean,
     description: 'Extract data in a format suitable for merging users into an existing instance'},
+  {
+    name: 'target',
+    type: value => {
+      if (!_.includes(TARGETS, value)) throw new Error(`Expected one of: ${TARGETS.join(', ')}`);
+      return value;
+    },
+    defaultValue: 'ghes',
+    typeLabel: '{underline saas|ghes}',
+    description: 'Target hosting environment. (Optional, defaults to ghes.)'
+  },
   {name: 'output', alias: 'o', typeLabel: '{underline data.ndjson}',
     description: 'Output ndJSON file for extracted data.'},
   {name: 'download', alias: 'd', typeLabel: '{underline file/download/dir}',
@@ -77,6 +89,7 @@ const repoNames =
   _(args.repos).thru(fs.readFileSync).thru(JSON.parse).map(_.toLower).uniq().value();
 const repoNamesSet = new Set(repoNames);
 const orgNames = _(repoNames).map(name => name.replace(/\/.*/, '')).uniq().value();
+const ghostUserKey = args.target === 'saas' ? 'github:10137' : 'github:1';
 
 const out = new PromiseWritable(fs.createWriteStream(args.output));
 out.stream.setMaxListeners(Infinity);
@@ -372,7 +385,7 @@ async function extractUsers() {
   if (_.isEmpty(userMap)) return;
   log('Extracting users');
   await forEachOfLimit(userMap, 25, async (newUserKey, oldUserKey) => {
-    if (newUserKey === 'github:1') return;
+    if (newUserKey === ghostUserKey) return;
     let user = await db.child('users/:oldUserKey', {oldUserKey}).get();
     if (!user) {
       unknownUsers.push(oldUserKey);
@@ -460,8 +473,8 @@ function mapUserKey(userKey, context) {
     userMap[userKey] = userKey;
     pace.total += 1;
   }
-  const newUserKey = userMap[userKey] || 'github:1';
-  if (!userMap[userKey] && userKey !== 'github:1') ghostedUsers.push({userKey, context});
+  const newUserKey = userMap[userKey] || ghostUserKey;
+  if (!userMap[userKey] && userKey !== ghostUserKey) ghostedUsers.push({userKey, context});
   return newUserKey;
 }
 
