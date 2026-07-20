@@ -484,7 +484,9 @@ function mapAllUserKeys(object, context) {
 }
 
 function mapUserKey(userKey, context) {
-  if (identityUserMap && !userMap[userKey]) {
+  if (identityUserMap && userKey === sourceGhostUserKey) return targetGhostUserKey;
+  // A real source user may collide with the target ghost ID; leave it unmapped so it is reported.
+  if (identityUserMap && !userMap[userKey] && userKey !== targetGhostUserKey) {
     userMap[userKey] = userKey;
     pace.total += 1;
   }
