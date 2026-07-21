@@ -1,40 +1,43 @@
 #!/usr/bin/env node
 
-import commandLineArgs from 'command-line-args';
-import getUsage from 'command-line-usage';
 import {writeFileSync} from 'fs';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
 // import {inspect} from 'util';
 
-const commandLineOptions = [
-  {name: 'path', alias: 'p', type: String, defaultOption: true,
-    description: 'The path in Firebase from which to read data.  You can omit the leading slash.'},
-  {name: 'output', alias: 'o', type: String,
-    description: 'The path of the output file to write to instead of the console.'},
-  {name: 'help', alias: 'h', type: Boolean,
-    description: 'Display these usage instructions.'}
-];
+const args = yargs(hideBin(process.argv))
+  .usage(
+    '$0 <path> [options]\n' +
+    '$0 --path <path> [options]\n\n' +
+    'Reads a given path from Firebase and prints the result, decrypting if necessary. ' +
+    'REVIEWABLE_FIREBASE_URL, REVIEWABLE_FIREBASE_CREDENTIALS_FILE, and ' +
+    'REVIEWABLE_ENCRYPTION_AES_KEY must be set.'
+  )
+  .option('path', {
+    alias: 'p', type: 'string',
+    describe: 'The path in Firebase from which to read data. You can omit the leading slash.'
+  })
+  .option('output', {
+    alias: 'o', type: 'string',
+    describe: 'The path of the output file to write to instead of the console.'
+  })
+  .strictOptions()
+  .check(parsedArgs => {
+    const pathOptionProvided = parsedArgs.path !== undefined;
+    if (pathOptionProvided && parsedArgs._.length) {
+      throw new Error('Specify the Firebase path either positionally or with --path, not both.');
+    }
+    if (parsedArgs._.length > 1) throw new Error('Only one Firebase path may be specified.');
+    if (!pathOptionProvided && !parsedArgs._.length) {
+      throw new Error('A Firebase path is required.');
+    }
+    return true;
+  })
+  .version(false)
+  .help()
+  .parse();
 
-const usageSpec = [
-  {header: 'Data readout tool',
-    content:
-      'Reads a given path from Firebase and prints the result, decrypting if necessary. ' +
-      'REVIEWABLE_FIREBASE_URL, REVIEWABLE_FIREBASE_CREDENTIALS_FILE, and ' +
-      'REVIEWABLE_ENCRYPTION_AES_KEY must be set.'
-  },
-  {header: 'Options', optionList: commandLineOptions}
-];
-
-const args = commandLineArgs(commandLineOptions);
-if (args.help) {
-  console.log(getUsage(usageSpec));
-  process.exit(0);
-}
-for (const property of ['path']) {
-  if (!(property in args)) {
-    console.log('Missing required option: ' + property + '.');
-    process.exit(1);
-  }
-}
+if (args.path === undefined) args.path = String(args._[0]);
 
 
 async function read() {

@@ -4,84 +4,66 @@ import _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as zlib from 'zlib';
-import commandLineArgs from 'command-line-args';
-import getUsage from 'command-line-usage';
 import {forEachLimit, forEachOfLimit, forEachOf, mapLimit} from 'async';
 import nodefireModule from 'nodefire';
 import {PromiseWritable} from 'promise-writable';
 import {default as download} from 'download';
 import Pace from 'pace';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
 import {uploadedFilesUrl, PLACEHOLDER_URL} from './lib/derivedInfo.js';
 
 const NodeFire = nodefireModule.default;
 
 const HOSTING_ENVIRONMENTS = ['saas', 'ghes'];
 
-const commandLineOptions = [
-  {name: 'repos', alias: 'r', typeLabel: '{underline repos.json}',
-    description: 'A file with a JSON array of "owner/repo" repo names to extract.'},
-  {name: 'orgs', alias: 'g', typeLabel: '{underline orgs.json}',
-    description: 'A file with a JSON object of \\{"source-org": "target-org"\\} ' +
-      'organization mappings.  (Optional, defaults to identity mapping for any missing orgs.)'},
-  {name: 'users', alias: 'u', typeLabel: '{underline users.json}',
-    description: 'A file with a JSON object of \\{"github:MMMM": "github:NNNN"\\} ' +
-      'user id mappings. (Optional, defaults to identity mapping.)'},
-  {name: 'merge', alias: 'm', type: Boolean,
-    description: 'Extract data in a format suitable for merging users into an existing instance'},
-  {
-    name: 'source',
-    type: value => {
-      if (!_.includes(HOSTING_ENVIRONMENTS, value)) {
-        throw new Error(`Expected one of: ${HOSTING_ENVIRONMENTS.join(', ')}`);
-      }
-      return value;
-    },
-    defaultValue: 'saas',
-    typeLabel: '{underline saas|ghes}',
-    description: 'Source hosting environment. (Optional, defaults to saas.)'
-  },
-  {
-    name: 'target',
-    type: value => {
-      if (!_.includes(HOSTING_ENVIRONMENTS, value)) {
-        throw new Error(`Expected one of: ${HOSTING_ENVIRONMENTS.join(', ')}`);
-      }
-      return value;
-    },
-    defaultValue: 'ghes',
-    typeLabel: '{underline saas|ghes}',
-    description: 'Target hosting environment. (Optional, defaults to ghes.)'
-  },
-  {name: 'output', alias: 'o', typeLabel: '{underline data.ndjson}',
-    description: 'Output ndJSON file for extracted data.'},
-  {name: 'download', alias: 'd', typeLabel: '{underline file/download/dir}',
-    description: 'Output directory for downloaded attachments'},
-  {name: 'logging', alias: 'l', type: Boolean,
-    description: 'Turn on low-level Firebase logging for debugging purposes'},
-  {name: 'help', alias: 'h', type: Boolean,
-    description: 'Display these usage instructions.'}
-];
-
-const usageSpec = [
-  {header: 'Data extraction tool',
-    content:
-      'Extracts all data related to a set of repos from a Reviewable datastore, in preparation ' +
-      'for transforming and loading it into another datastore.'
-  },
-  {header: 'Options', optionList: commandLineOptions}
-];
-
-const args = commandLineArgs(commandLineOptions);
-if (args.help) {
-  console.log(getUsage(usageSpec));
-  process.exit(0);
-}
-for (const property of ['repos', 'output']) {
-  if (!(property in args)) {
-    console.log('Missing required option: ' + property + '.');
-    process.exit(1);
-  }
-}
+const args = yargs(hideBin(process.argv))
+  .usage(
+    '$0 [options]\n\n' +
+    'Extracts all data related to a set of repos from a Reviewable datastore, in preparation ' +
+    'for transforming and loading it into another datastore.'
+  )
+  .option('repos', {
+    alias: 'r', type: 'string', demandOption: true,
+    describe: 'A file with a JSON array of "owner/repo" repo names to extract.'
+  })
+  .option('orgs', {
+    alias: 'g', type: 'string',
+    describe: 'A file with a JSON object of {"source-org": "target-org"} organization mappings. ' +
+      '(Optional, defaults to identity mapping for any missing orgs.)'
+  })
+  .option('users', {
+    alias: 'u', type: 'string',
+    describe: 'A file with a JSON object of {"github:MMMM": "github:NNNN"} user id mappings. ' +
+      '(Optional, defaults to identity mapping.)'
+  })
+  .option('merge', {
+    alias: 'm', type: 'boolean',
+    describe: 'Extract data in a format suitable for merging users into an existing instance'
+  })
+  .option('source', {
+    choices: HOSTING_ENVIRONMENTS, default: 'saas',
+    describe: 'Source hosting environment. (Optional, defaults to saas.)'
+  })
+  .option('target', {
+    choices: HOSTING_ENVIRONMENTS, default: 'ghes',
+    describe: 'Target hosting environment. (Optional, defaults to ghes.)'
+  })
+  .option('output', {
+    alias: 'o', type: 'string', demandOption: true,
+    describe: 'Output ndJSON file for extracted data.'
+  })
+  .option('download', {
+    alias: 'd', type: 'string', describe: 'Output directory for downloaded attachments'
+  })
+  .option('logging', {
+    alias: 'l', type: 'boolean',
+    describe: 'Turn on low-level Firebase logging for debugging purposes'
+  })
+  .strict()
+  .version(false)
+  .help()
+  .parse();
 
 let uploadedFilesUrlRegex;
 if (uploadedFilesUrl) {
