@@ -6,6 +6,7 @@ import {hideBin} from 'yargs/helpers';
 // import {inspect} from 'util';
 
 const args = yargs(hideBin(process.argv))
+  .parserConfiguration({'parse-positional-numbers': false})
   .usage(
     '$0 <path> [options]\n' +
     '$0 --path <path> [options]\n\n' +
