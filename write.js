@@ -1,39 +1,28 @@
 #!/usr/bin/env node
 
-import commandLineArgs from 'command-line-args';
-import getUsage from 'command-line-usage';
 import fs from 'fs';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
 
-const commandLineOptions = [
-  {name: 'path', alias: 'p', type: String,
-    description: 'The path in Firebase to which to write data.  You can omit the leading slash.'},
-  {name: 'file', alias: 'f', type: String,
-    description: 'The JSON file containing the data'},
-  {name: 'help', alias: 'h', type: Boolean,
-    description: 'Display these usage instructions.'}
-];
-
-const usageSpec = [
-  {header: 'Data readout tool',
-    content:
-      'Writes stdin stream to a given path in Firebase, encrypting if necessary. ' +
-      'REVIEWABLE_FIREBASE_URL, REVIEWABLE_FIREBASE_CREDENTIALS_FILE, and ' +
-      'REVIEWABLE_ENCRYPTION_AES_KEY must be set.'
-  },
-  {header: 'Options', optionList: commandLineOptions}
-];
-
-const args = commandLineArgs(commandLineOptions);
-if (args.help) {
-  console.log(getUsage(usageSpec));
-  process.exit(0);
-}
-for (const property of ['path', 'file']) {
-  if (!(property in args)) {
-    console.log('Missing required option: ' + property + '.');
-    process.exit(1);
-  }
-}
+const args = yargs(hideBin(process.argv))
+  .usage(
+    '$0 [options]\n\n' +
+    'Writes a JSON file to a given path in Firebase, encrypting if necessary. ' +
+    'REVIEWABLE_FIREBASE_URL, REVIEWABLE_FIREBASE_CREDENTIALS_FILE, and ' +
+    'REVIEWABLE_ENCRYPTION_AES_KEY must be set.'
+  )
+  .option('path', {
+    alias: 'p', type: 'string', demandOption: true,
+    describe: 'The path in Firebase to which to write data. You can omit the leading slash.'
+  })
+  .option('file', {
+    alias: 'f', type: 'string', demandOption: true,
+    describe: 'The JSON file containing the data'
+  })
+  .strict()
+  .version(false)
+  .help()
+  .parse();
 
 async function write() {
   await import('./lib/loadFirebase.js');

@@ -6,6 +6,16 @@ export default [
   ...reviewableConfigBaseline,
   ...reviewableConfigLodash,
   {
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true
+        },
+        node: {
+          extensions: ['.js', '.mjs', '.cjs', '.json']
+        }
+      }
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

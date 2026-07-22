@@ -4,47 +4,36 @@ import _ from 'lodash';
 import * as fs from 'fs';
 import * as zlib from 'zlib';
 import es from 'event-stream';
-import commandLineArgs from 'command-line-args';
-import getUsage from 'command-line-usage';
 import nodefireModule from 'nodefire';
 import Hubkit from 'hubkit';
 import {PromiseReadable} from 'promise-readable';
 import Pace from 'pace';
 import {Throttle} from 'stream-throttle';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
 import {uploadedFilesUrl, PLACEHOLDER_URL} from './lib/derivedInfo.js';
 import {fetchToken} from './lib/tokens.js';
 
 const NodeFire = nodefireModule.default;
 
-const commandLineOptions = [
-  {name: 'input', alias: 'i', typeLabel: '{underline data.ndjson}',
-    description: 'Input ndJSON file with extracted data.'},
-  {name: 'admin', alias: 'a', typeLabel: '{underline github:NNNN}',
-    description: 'The user id of a GHE user with valid OAuth credentials in Reviewable.'},
-  {name: 'help', alias: 'h', type: Boolean,
-    description: 'Display these usage instructions.'}
-];
-
-const usageSpec = [
-  {header: 'Data upload tool',
-    content:
-      'Uploads all data related to a set of repos (previously extracted with extract_data.js) to ' +
-      'a Reviewable datastore and resyncs some data with GitHub Enterprise.'
-  },
-  {header: 'Options', optionList: commandLineOptions}
-];
-
-const args = commandLineArgs(commandLineOptions);
-if (args.help) {
-  console.log(getUsage(usageSpec));
-  process.exit(0);
-}
-for (const property of ['input', 'admin']) {
-  if (!(property in args)) {
-    console.log('Missing required option: ' + property + '.');
-    process.exit(1);
-  }
-}
+const args = yargs(hideBin(process.argv))
+  .usage(
+    '$0 [options]\n\n' +
+    'Uploads all data related to a set of repos (previously extracted with extract_data.js) to ' +
+    'a Reviewable datastore and resyncs some data with GitHub Enterprise.'
+  )
+  .option('input', {
+    alias: 'i', type: 'string', demandOption: true,
+    describe: 'Input ndJSON file with extracted data.'
+  })
+  .option('admin', {
+    alias: 'a', type: 'string', demandOption: true,
+    describe: 'The user id of a GHE user with valid OAuth credentials in Reviewable.'
+  })
+  .strict()
+  .version(false)
+  .help()
+  .parse();
 
 if (!process.env.REVIEWABLE_ENCRYPTION_AES_KEY) {
   console.warn('WARNING: not encrypting uploaded data as REVIEWABLE_ENCRYPTION_AES_KEY not given');
