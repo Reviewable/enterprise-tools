@@ -6,6 +6,11 @@
           "value": "#"
         }
       },
+      "cap": {
+        ".encrypt": {
+          "value": "#"
+        }
+      },
       "bang": {
         ".encrypt": {
           "value": "#"
@@ -26,6 +31,13 @@
       "$containerName": {
         ".encrypt": {
           "key": "#",
+          "few": true
+        }
+      }
+    },
+    "lastTaskAttemptsWarningTimestampByQueueName": {
+      "$queueName": {
+        ".encrypt": {
           "few": true
         }
       }
@@ -159,6 +171,28 @@
                 "value": "#"
               }
             }
+          }
+        }
+      },
+      "githubApprovalSync": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
+        "$prKey": {
+          "owner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "repo": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          ".encrypt": {
+            "key": "#|#|."
           }
         }
       },
@@ -299,6 +333,16 @@
             }
           },
           "repo": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "securityOwner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "securityRepo": {
             ".encrypt": {
               "value": "#"
             }
@@ -578,6 +622,16 @@
             }
           },
           "repo": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "securityOwner": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "securityRepo": {
             ".encrypt": {
               "value": "#"
             }
@@ -1634,13 +1688,6 @@
           }
         },
         "index": {
-          "subscriptions": {
-            "$subscriptionId": {
-              ".encrypt": {
-                "few": true
-              }
-            }
-          },
           "memberships": {
             "$membershipKey": {
               ".encrypt": {
