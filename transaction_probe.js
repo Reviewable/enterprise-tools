@@ -193,13 +193,9 @@ function firebaseLogger(message) {
   if (outgoing?.a === 'p' && outgoing.b?.h !== undefined) {
     transactionRequestIds.add(outgoing.r);
     recordWire({
-      message: originalMessage,
       direction: 'client-to-server',
       requestId: outgoing.r,
-      action: outgoing.a,
-      path: outgoing.b.p,
-      hash: outgoing.b.h,
-      data: summarizeValue(outgoing.b.d)
+      message: originalMessage
     });
     return;
   }
@@ -207,11 +203,9 @@ function firebaseLogger(message) {
   const incoming = parseJsonAfter(line, 'from server:');
   if (incoming && transactionRequestIds.has(incoming.r)) {
     recordWire({
-      message: originalMessage,
       direction: 'server-to-client',
       requestId: incoming.r,
-      status: incoming.b?.s,
-      data: summarizeValue(incoming.b?.d)
+      message: originalMessage
     });
     return;
   }
@@ -222,11 +216,8 @@ function firebaseLogger(message) {
   const update = parseJsonAfter(line, match[0]);
   if (!update) return;
   recordWire({
-    message: originalMessage,
     direction: 'server-push',
-    action: match[1],
-    path: update.p,
-    data: summarizeValue(update.d)
+    message: originalMessage
   });
 }
 
