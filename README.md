@@ -5,9 +5,9 @@ See https://github.com/Reviewable/Reviewable/blob/master/enterprise/operations.m
 
 ## Stuck transaction probe
 
-`transaction_probe.js` diagnoses a possibly stuck transaction at an encrypted logical Firebase
-path. Run the read and cold-cache transaction in separate processes so the read does not warm the SDK
-cache:
+`transaction_probe.js` diagnoses a possibly stuck transaction at a Firecrypt-managed logical
+Firebase path, whether or not encryption is enabled. Run the read and cold-cache transaction in
+separate processes so the read does not warm the SDK cache:
 
 ```
 node transaction_probe.js 'reviews/example' --read --attachment attachment_1.json --output read-report.json
@@ -16,8 +16,9 @@ node transaction_probe.js 'reviews/example' --transaction --attachment attachmen
 
 Passing both `--read` and `--transaction` deliberately tests the transaction after warming the
 cache. Use `--max-attempts` and `--timeout` to change the bounds, `--no-logging` to disable the
-sanitized Firebase wire report, and `--include-values` only when decrypted values should be copied
-into the report.
+filtered Firebase wire log, and `--include-values` only when logical values should be copied into the
+report. Matching wire messages are recorded verbatim and may contain raw stored values, especially
+when Firecrypt encryption is disabled, so protect the report accordingly.
 
 `--transaction` is a Firebase compare-and-put write attempt even though it returns the value
 unchanged. It may evaluate write rules and should only be used on a path where this is acceptable.

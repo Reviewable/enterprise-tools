@@ -13,10 +13,10 @@ const args = yargs(hideBin(process.argv))
   .usage(
     '$0 <path> (--read | --transaction) [options]\n' +
     '$0 --path <path> (--read | --transaction) [options]\n\n' +
-    'Diagnoses a possibly stuck Firebase transaction at an encrypted logical path. ' +
+    'Diagnoses a possibly stuck Firebase transaction at a Firecrypt-managed logical path. ' +
     'The transaction is a raw no-op that returns its current stored input. ' +
-    'REVIEWABLE_FIREBASE_URL, REVIEWABLE_FIREBASE_CREDENTIALS_FILE, and ' +
-    'REVIEWABLE_ENCRYPTION_AES_KEY (if the database is encrypted) must be set.'
+    'REVIEWABLE_FIREBASE_URL and Firebase credentials must be set. Set ' +
+    'REVIEWABLE_ENCRYPTION_AES_KEY only when Firecrypt encryption is enabled.'
   )
   .option('path', {
     alias: 'p', type: 'string',
@@ -24,7 +24,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option('read', {
     type: 'boolean', default: false,
-    describe: 'Read and summarize the decrypted value before exiting or starting the transaction.'
+    describe: 'Read and summarize the logical value before exiting or starting the transaction.'
   })
   .option('transaction', {
     type: 'boolean', default: false,
@@ -32,7 +32,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option('logging', {
     type: 'boolean', default: true,
-    describe: 'Capture sanitized Firebase transaction wire events. Disable with --no-logging.'
+    describe: 'Capture filtered Firebase wire logs verbatim; they may contain stored values.'
   })
   .option('max-attempts', {
     type: 'number', default: 6,
@@ -48,7 +48,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option('include-values', {
     type: 'boolean', default: false,
-    describe: 'Include decrypted values in the report. Otherwise only summaries and digests appear.'
+    describe: 'Include logical values in the report. Otherwise only summaries and digests appear.'
   })
   .option('output', {
     alias: 'o', type: 'string',
@@ -133,7 +133,8 @@ function summarizeValue(value) {
   const summary = {
     type: value === null ? 'null' : _.isArray(value) ? 'array' : typeof value,
     bytes: Buffer.byteLength(json, 'utf8'),
-    sha256: createHash('sha256').update(json).digest('hex')
+    // This is a local report fingerprint, not the SHA-1 hash sent by Firebase transactions.
+    reportSha256: createHash('sha256').update(json).digest('hex')
   };
   if (_.isArray(value)) summary.items = value.length;
   else if (_.isObject(value)) summary.keys = _.keys(value).length;
@@ -142,7 +143,7 @@ function summarizeValue(value) {
 
 function sameValue(left, right) {
   if (left === undefined || right === undefined) return left === right;
-  return summarizeValue(left).sha256 === summarizeValue(right).sha256;
+  return summarizeValue(left).reportSha256 === summarizeValue(right).reportSha256;
 }
 
 function resolveStoredReference(firecryptRef) {
@@ -184,13 +185,15 @@ function parseJsonAfter(line, marker) {
 }
 
 function firebaseLogger(message) {
-  const line = _.trim(String(message));
+  const originalMessage = String(message);
+  const line = _.trim(originalMessage);
 
   // Outgoing compare-and-put requests are the only puts that include a hash.
   const outgoing = parseJsonAfter(line, '');
   if (outgoing?.a === 'p' && outgoing.b?.h !== undefined) {
     transactionRequestIds.add(outgoing.r);
     recordWire({
+      message: originalMessage,
       direction: 'client-to-server',
       requestId: outgoing.r,
       action: outgoing.a,
@@ -204,6 +207,7 @@ function firebaseLogger(message) {
   const incoming = parseJsonAfter(line, 'from server:');
   if (incoming && transactionRequestIds.has(incoming.r)) {
     recordWire({
+      message: originalMessage,
       direction: 'server-to-client',
       requestId: incoming.r,
       status: incoming.b?.s,
@@ -218,6 +222,7 @@ function firebaseLogger(message) {
   const update = parseJsonAfter(line, match[0]);
   if (!update) return;
   recordWire({
+    message: originalMessage,
     direction: 'server-push',
     action: match[1],
     path: update.p,
@@ -287,7 +292,7 @@ async function probe() {
           attempt: callbackCount,
           input: {
             raw: summarizeValue(currentRawValue),
-            decrypted: summarizeValue(currentValue)
+            logical: summarizeValue(currentValue)
           },
           sameRawValueAsPrevious: callbackCount === 1 ? undefined :
           sameValue(currentRawValue, previousRawValue),
@@ -295,7 +300,7 @@ async function probe() {
           matchesAttachment: attachmentValue === undefined ? undefined :
           sameValue(currentValue, attachmentValue)
         };
-        if (args.includeValues) callback.input.decrypted.data = structuredClone(currentValue);
+        if (args.includeValues) callback.input.logical.data = structuredClone(currentValue);
         report.transaction.callbacks.push(callback);
         console.error(`[transaction-callback] ${JSON.stringify(callback)}`);
         previousRawValue = structuredClone(currentRawValue);
@@ -317,12 +322,12 @@ async function probe() {
         report.transaction.callbackCount = callbackCount;
         report.transaction.finalValue = {
           raw: summarizeValue(finalRawValue),
-          decrypted: summarizeValue(finalValue)
+          logical: summarizeValue(finalValue)
         };
         report.transaction.finalMatchesAttachment = attachmentValue === undefined ? undefined :
           sameValue(finalValue, attachmentValue);
         if (args.includeValues) {
-          report.transaction.finalValue.decrypted.data = structuredClone(finalValue);
+          report.transaction.finalValue.logical.data = structuredClone(finalValue);
         }
       } catch (error) {
         report.transaction.outcome = 'error';
