@@ -6,11 +6,13 @@
   "bin": {
     "extract_data": "./extract_data.js",
     "load_data": "./load_data.js",
-    "read": "./read.js"
+    "read": "./read.js",
+    "transaction_probe": "./transaction_probe.js"
   },
   "scripts": {
     "extract_data": "node ./extract_data.js",
     "load_data": "node ./load_data.js",
+    "transaction_probe": "node ./transaction_probe.js",
     "lint": "eslint *.js lib/*.js"
   },
   "engines": {
