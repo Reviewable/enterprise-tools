@@ -40,7 +40,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option('timeout', {
     type: 'number', default: 30000,
-    describe: 'Maximum milliseconds to wait for each read or transaction operation.'
+    describe: 'Client wait bound in milliseconds; a timeout leaves the server outcome unknown.'
   })
   .option('attachment', {
     alias: 'a', type: 'string',
@@ -104,14 +104,6 @@ const report = {
 };
 
 let attachmentValue;
-if (args.attachment) {
-  attachmentValue = JSON.parse(readFileSync(args.attachment, 'utf8'));
-  report.attachment = {
-    file: args.attachment,
-    value: summarizeValue(attachmentValue)
-  };
-  if (args.includeValues) report.attachment.value.data = attachmentValue;
-}
 
 let transactionStarted = false;
 const transactionRequestIds = new Set();
@@ -247,6 +239,13 @@ async function probe() {
 
   let app;
   try {
+    if (args.attachment) {
+      report.attachment = {file: args.attachment};
+      attachmentValue = JSON.parse(readFileSync(args.attachment, 'utf8'));
+      report.attachment.value = summarizeValue(attachmentValue);
+      if (args.includeValues) report.attachment.value.data = attachmentValue;
+    }
+
     let database;
     ({default: app, database} = await import('./lib/initializeFirebase.js'));
     const firecryptRef = database.ref(firebasePath);

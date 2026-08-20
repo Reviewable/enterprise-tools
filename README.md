@@ -23,3 +23,8 @@ when Firecrypt encryption is disabled, so protect the report accordingly.
 `--transaction` is a Firebase compare-and-put write attempt even though it returns the value
 unchanged. It may evaluate write rules and should only be used on a path where this is acceptable.
 The path is required and the database root is rejected.
+
+`--timeout` only limits how long the probe waits for a response; it does not cancel a request that
+Firebase has already received. If a transaction reports `outcome: "error"` with code
+`PROBE_TIMEOUT`, its server-side outcome is unknown and the compare-and-put may still complete after
+the probe disconnects. Verify the target path before retrying.
