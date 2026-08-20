@@ -1,16 +1,18 @@
 {
   "name": "reviewable-enterprise-tools",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "type": "module",
   "description": "Admin tools for Reviewable Enterprise",
   "bin": {
     "extract_data": "./extract_data.js",
     "load_data": "./load_data.js",
-    "read": "./read.js"
+    "read": "./read.js",
+    "transaction_probe": "./transaction_probe.js"
   },
   "scripts": {
     "extract_data": "node ./extract_data.js",
     "load_data": "node ./load_data.js",
+    "transaction_probe": "node ./transaction_probe.js",
     "lint": "eslint *.js lib/*.js"
   },
   "engines": {
