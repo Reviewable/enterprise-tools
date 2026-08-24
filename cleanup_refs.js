@@ -4,7 +4,7 @@ import fs from 'fs';
 import readline from 'readline';
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
-import {eachLimit} from 'async';
+import pMap from 'p-map';
 import ms from 'ms';
 import Pace from 'pace';
 import _ from 'lodash';
@@ -84,7 +84,7 @@ async function main() {
   const pace = Pace(refs.length);  // eslint-disable-line new-cap
   const maxDelay = ms(args.maxDelay);
   let saved = 0;
-  await eachLimit(_.chunk(refs, UPDATE_SIZE), MAX_PARALLEL_UPDATES, async refsBatch => {
+  await pMap(_.chunk(refs, UPDATE_SIZE), async refsBatch => {
     const updates = {};
     _.forEach(refsBatch, ref => {
       const delay = Math.round(Math.random() * maxDelay);
@@ -95,7 +95,7 @@ async function main() {
     await ldb.update(updates);
     saved += refsBatch.length;
     pace.op(saved);
-  });
+  }, {concurrency: MAX_PARALLEL_UPDATES});
 }
 
 await main();
