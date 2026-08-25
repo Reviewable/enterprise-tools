@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as zlib from 'zlib';
-import {forEachLimit, forEachOfLimit, forEachOf, mapLimit} from 'async';
+import pMap from 'p-map';
 import nodefireModule from 'nodefire';
 import {PromiseWritable} from 'promise-writable';
 import {default as download} from 'download';
@@ -149,13 +149,13 @@ async function logUnmappedUsers() {
   if (!ghostedUsers.length) return;
   ghostedUsers = _.uniqBy(ghostedUsers, 'userKey');
   console.log(`\n${ghostedUsers.length} users could not be mapped over:`);
-  const users = await mapLimit(ghostedUsers, 5, async item => {
+  const users = await pMap(ghostedUsers, async item => {
     const user = await db.child('users/:userKey/core/public', {userKey: item.userKey}).get();
     return {
       username: user ? user.username : `user ${item.userKey.replace(/github:/, '')}`,
       context: item.context
     };
-  });
+  }, {concurrency: 5});
   console.log(
     _(users)
       .sortBy(user => _.toLower(user.username))
@@ -203,7 +203,7 @@ async function extractSystem() {
 async function extractOrganizations() {
   if (!orgNames.length) return;
   log('Extracting organizations');
-  await forEachLimit(orgNames, 5, async org => {
+  await pMap(orgNames, async org => {
     const organization = await db.child('organizations/:org', {org}).get();
     if (organization) {
       delete organization.owners;  // owners might be different in new instance
@@ -217,13 +217,13 @@ async function extractOrganizations() {
       }
     }
     pace.op();
-  });
+  }, {concurrency: 5});
 }
 
 async function extractRepositories() {
   if (!repoNames.length) return;
   log('Extracting repositories');
-  await forEachLimit(repoNames, 10, async repoName => {
+  await pMap(repoNames, async repoName => {
     const [owner, repo] = repoName.split('/');
     let repository = await db.child('repositories/:owner/:repo', {owner, repo}).get();
     if (repository) {
@@ -251,24 +251,24 @@ async function extractRepositories() {
       }
     }
     pace.op();
-  });
+  }, {concurrency: 10});
 }
 
 async function extractRules() {
   if (!repoNames.length) return;
   log('Extracting rules');
-  await forEachLimit(repoNames, 10, async repoName => {
+  await pMap(repoNames, async repoName => {
     const [owner, repo] = repoName.split('/');
     const rule = await db.child('rules/:owner/:repo', {owner, repo}).get();
     await writeItem(`rules/${toKey(mapOrg(owner))}/${toKey(repo)}`, rule);
     pace.op();
-  });
+  }, {concurrency: 10});
 }
 
 async function extractReviews() {
   if (!reviewKeys.length) return;
   log('Extracting reviews');
-  await forEachLimit(reviewKeys, 25, async reviewKey => {
+  await pMap(reviewKeys, async reviewKey => {
     let review = await db.child('reviews/:reviewKey', {reviewKey}).get();
     if (review) {
       await stripReview(review, reviewKey);
@@ -288,7 +288,7 @@ async function extractReviews() {
       }
     }
     pace.op();
-  });
+  }, {concurrency: 25});
 }
 
 async function stripReview(review, key) {
@@ -351,37 +351,37 @@ async function stripReview(review, key) {
 async function extractLinemaps() {
   if (!reviewKeys.length) return;
   log('Extracting linemaps');
-  await forEachLimit(reviewKeys, 25, async reviewKey => {
+  await pMap(reviewKeys, async reviewKey => {
     const linemap = await db.child('linemaps/:reviewKey', {reviewKey}).get();
     await writeItem(`linemaps/${reviewKey}`, linemap);
     pace.op();
-  });
+  }, {concurrency: 25});
 }
 
 async function extractFilemaps() {
   if (!reviewKeys.length) return;
   log('Extracting filemaps');
-  await forEachLimit(reviewKeys, 25, async reviewKey => {
+  await pMap(reviewKeys, async reviewKey => {
     const filemap = await db.child('filemaps/:reviewKey', {reviewKey}).get();
     await writeItem(`filemaps/${reviewKey}`, filemap);
     pace.op();
-  });
+  }, {concurrency: 25});
 }
 
 async function extractBasemaps() {
   if (!reviewKeys.length) return;
   log('Extracting basemaps');
-  await forEachLimit(reviewKeys, 25, async reviewKey => {
+  await pMap(reviewKeys, async reviewKey => {
     const basemap = await db.child('basemaps/:reviewKey', {reviewKey}).get();
     await writeItem(`basemaps/${reviewKey}`, basemap);
     pace.op();
-  });
+  }, {concurrency: 25});
 }
 
 async function extractUsers() {
   if (_.isEmpty(userMap)) return;
   log('Extracting users');
-  await forEachOfLimit(userMap, 25, async (newUserKey, oldUserKey) => {
+  await pMap(_.toPairs(userMap), async ([oldUserKey, newUserKey]) => {
     if (newUserKey === targetGhostUserKey) return;
     let user = await db.child('users/:oldUserKey', {oldUserKey}).get();
     if (!user) {
@@ -417,7 +417,7 @@ async function extractUsers() {
     if (args.merge) {
       const bareUser = _.omit(user, 'onboarding', 'settings', 'state', 'index');
       if (!_.isEmpty(bareUser)) await writeItem(`users/${newUserKey}`, bareUser);
-      await forEachOf(['onboarding', 'settings', 'state'], async key => {
+      await pMap(['onboarding', 'settings', 'state'], async key => {
         if (!_.isEmpty(user[key])) await writeItem(`users/${newUserKey}/${key}`, user[key]);
       });
       if (user.index?.extraMentions) {
@@ -427,7 +427,7 @@ async function extractUsers() {
       await writeItem(`users/${newUserKey}`, user);
     }
     pace.op();
-  });
+  }, {concurrency: 25});
 }
 
 async function writeItem(key, value, flags) {
