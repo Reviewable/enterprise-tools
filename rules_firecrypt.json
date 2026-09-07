@@ -174,6 +174,31 @@
           }
         }
       },
+      "githubStatusSync": {
+        "ping": {
+          ".encrypt": {
+            "key": ""
+          }
+        },
+        "$commitKey": {
+          "events": {
+            "$statusKey": {
+              "payload": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              },
+              ".encrypt": {
+                "key": "#",
+                "few": true
+              }
+            }
+          },
+          ".encrypt": {
+            "key": "#|#|."
+          }
+        }
+      },
       "githubApprovalSync": {
         "ping": {
           ".encrypt": {
@@ -1062,6 +1087,11 @@
         },
         "participants": {
           "$userKey": {
+            "blockerReason": {
+              ".encrypt": {
+                "value": "#"
+              }
+            },
             ".encrypt": {
               "few": true
             }
@@ -1757,6 +1787,36 @@
             }
           }
         },
+        "slackMessages": {
+          "$channel": {
+            "$ts": {
+              "ownerName": {
+                ".encrypt": {
+                  "value": "#"
+                }
+              },
+              "reviews": {
+                "$reviewKey": {
+                  "repoName": {
+                    ".encrypt": {
+                      "value": "#"
+                    }
+                  },
+                  ".encrypt": {
+                    "few": true
+                  }
+                }
+              },
+              ".encrypt": {
+                "few": true
+              }
+            },
+            ".encrypt": {
+              "key": "#",
+              "few": true
+            }
+          }
+        },
         "settings": {
           "lastDashboardOrganization": {
             ".encrypt": {
@@ -1833,6 +1893,15 @@
         },
         "state": {
           "$reviewKey": {
+            "dashboardCache": {
+              "discussionParticipantFlags": {
+                "$userKey": {
+                  ".encrypt": {
+                    "few": true
+                  }
+                }
+              }
+            },
             "drafts": {
               "$draftKey": {
                 "markdownBody": {
