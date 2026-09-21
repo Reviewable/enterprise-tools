@@ -313,6 +313,11 @@
               "value": "#"
             }
           },
+          "shortDescription": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           "authorUsername": {
             ".encrypt": {
               "value": "#"
@@ -1131,6 +1136,11 @@
             }
           },
           "labels": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
+          "requestedTeams": {
             ".encrypt": {
               "value": "#"
             }
