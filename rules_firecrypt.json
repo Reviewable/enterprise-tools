@@ -1218,6 +1218,13 @@
                 }
               }
             },
+            "missingRevisions": {
+              "$revisionKey": {
+                ".encrypt": {
+                  "few": true
+                }
+              }
+            },
             ".encrypt": {
               "few": true
             }
@@ -1828,6 +1835,11 @@
           }
         },
         "settings": {
+          "lgtmText": {
+            ".encrypt": {
+              "value": "#"
+            }
+          },
           "lastDashboardOrganization": {
             ".encrypt": {
               "value": "#"
