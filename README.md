@@ -1,6 +1,11 @@
 # enterprise-tools
 Administrative tools for Reviewable Enterprise
 
+Enable Corepack and run `yarn install --immutable` for development. The package pins its Yarn
+version and uses the `node-modules` linker. Releases use `npm pack` / `npm publish` so that
+`bundleDependencies` includes the tested runtime dependency tree. Runtime dependency updates
+require a new package version; dev-only lockfile updates do not unless published output changes.
+
 See https://github.com/Reviewable/Reviewable/blob/master/enterprise/operations.md for usage instructions.
 
 ## Stuck transaction probe
