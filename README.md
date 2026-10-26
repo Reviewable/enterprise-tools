@@ -1,6 +1,19 @@
 # enterprise-tools
 Administrative tools for Reviewable Enterprise
 
+## Installation
+
+Install the published commands with npm:
+
+```bash
+npm install --global reviewable-enterprise-tools
+load_data --help
+```
+
+See https://github.com/Reviewable/Reviewable/blob/master/enterprise/operations.md for usage instructions.
+
+## Development and publishing
+
 Enable Corepack and run `yarn install --immutable` for development. The package pins its Yarn
 version and uses the `node-modules` linker. Releases use `npm pack` / `npm publish` so that
 `bundleDependencies` includes the tested runtime dependency tree. The `prepack` hook runs
@@ -8,17 +21,15 @@ version and uses the `node-modules` linker. Releases use `npm pack` / `npm publi
 without `node_modules`. Runtime dependency updates require a new package version; dev-only
 lockfile updates do not unless published output changes.
 
-See https://github.com/Reviewable/Reviewable/blob/master/enterprise/operations.md for usage instructions.
-
 ## Stuck transaction probe
 
-`transaction_probe.js` diagnoses a possibly stuck transaction at a Firecrypt-managed logical
+`transaction_probe` diagnoses a possibly stuck transaction at a Firecrypt-managed logical
 Firebase path, whether or not encryption is enabled. Run the read and cold-cache transaction in
 separate processes so the read does not warm the SDK cache:
 
 ```
-node transaction_probe.js 'reviews/example' --read --attachment attachment_1.json --output read-report.json
-node transaction_probe.js 'reviews/example' --transaction --attachment attachment_1.json --output transaction-report.json
+transaction_probe 'reviews/example' --read --attachment attachment_1.json --output read-report.json
+transaction_probe 'reviews/example' --transaction --attachment attachment_1.json --output transaction-report.json
 ```
 
 Passing both `--read` and `--transaction` deliberately tests the transaction after warming the
