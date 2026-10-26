@@ -19,7 +19,7 @@ const NodeFire = nodefireModule.default;
 const args = yargs(hideBin(process.argv))
   .usage(
     '$0 [options]\n\n' +
-    'Uploads all data related to a set of repos (previously extracted with extract_data.js) to ' +
+    'Uploads all data related to a set of repos (previously extracted with rvbl-extract-data) to ' +
     'a Reviewable datastore and resyncs some data with GitHub Enterprise.'
   )
   .option('input', {
