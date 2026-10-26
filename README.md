@@ -7,8 +7,22 @@ Install the published commands with npm:
 
 ```bash
 npm install --global reviewable-enterprise-tools
-load_data --help
+rvbl-read --help
 ```
+
+The following commands are available from any directory:
+
+| Command | Purpose |
+| --- | --- |
+| `rvbl-read` | Read and decrypt a Firebase path. |
+| `rvbl-write` | Write a JSON file to a Firebase path, encrypting as needed. |
+| `rvbl-extract-data` | Extract repository data for migration. |
+| `rvbl-load-data` | Load migrated data into a Reviewable datastore. |
+| `rvbl-cleanup-refs` | Validate Git refs and schedule their cleanup. |
+| `rvbl-transaction-probe` | Diagnose a possibly stuck Firebase transaction. |
+
+Run any command with `--help` for its options. The previous `read`, `extract_data`,
+`load_data`, and `transaction_probe` names remain available as compatibility aliases.
 
 See https://github.com/Reviewable/Reviewable/blob/master/enterprise/operations.md for usage instructions.
 
@@ -23,13 +37,13 @@ lockfile updates do not unless published output changes.
 
 ## Stuck transaction probe
 
-`transaction_probe` diagnoses a possibly stuck transaction at a Firecrypt-managed logical
+`rvbl-transaction-probe` diagnoses a possibly stuck transaction at a Firecrypt-managed logical
 Firebase path, whether or not encryption is enabled. Run the read and cold-cache transaction in
 separate processes so the read does not warm the SDK cache:
 
 ```
-transaction_probe 'reviews/example' --read --attachment attachment_1.json --output read-report.json
-transaction_probe 'reviews/example' --transaction --attachment attachment_1.json --output transaction-report.json
+rvbl-transaction-probe 'reviews/example' --read --attachment attachment_1.json --output read-report.json
+rvbl-transaction-probe 'reviews/example' --transaction --attachment attachment_1.json --output transaction-report.json
 ```
 
 Passing both `--read` and `--transaction` deliberately tests the transaction after warming the

@@ -4394,6 +4394,12 @@ reviewable-configs@Reviewable/reviewable-configs:
     extract_data: ./extract_data.js
     load_data: ./load_data.js
     read: ./read.js
+    rvbl-cleanup-refs: ./cleanup_refs.js
+    rvbl-extract-data: ./extract_data.js
+    rvbl-load-data: ./load_data.js
+    rvbl-read: ./read.js
+    rvbl-transaction-probe: ./transaction_probe.js
+    rvbl-write: ./write.js
     transaction_probe: ./transaction_probe.js
   languageName: unknown
   linkType: soft
