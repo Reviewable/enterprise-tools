@@ -150,9 +150,10 @@ async function tweakReview(review) {
       if (body === comment.markdownBody) return;
       comment.markdownBody = body;
       promises.push(
-        gh.request('POST /markdown', {body: {
-          text: body, mode: 'gfm', context: fullRepoName
-        }}).then(htmlBody => {
+        gh.request('POST /markdown', {
+          idempotent: true,  // Rendering markdown has no write side effects.
+          body: {text: body, mode: 'gfm', context: fullRepoName}
+        }).then(htmlBody => {
           comment.htmlBody = htmlBody;
         })
       );
